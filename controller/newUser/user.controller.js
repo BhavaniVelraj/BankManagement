@@ -1,5 +1,7 @@
 const database = require('../../database/database');
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
 
 
 const user = database.users;
@@ -113,6 +115,36 @@ async function deleteUser(req,res){
 
 }
 
+// login 
+async function login(req, res, next) {
+	let email = req.query.email;
+	let password = req.query.password;
+	let users = await user.findOne({ "email": email }).exec();
+	if (users) {
+		let pass = users.password
+		let match = await bcrypt.compare(password, pass);
+		let payload = { users: { id: users.uuid } }
+		let signature = "randomString";
+		let token = jwt.sign(payload, signature, { expiresIn: 1000000 });
+
+		let data = await user.findOneAndUpdate({ email: email }, { login_status: true, verify_token: token }, { new: true }).exec();
+
+		if (match) {
+			res.json({ "status": "Success", "message": "Login successfully", "data": data });
+		} else {
+			res.json({ "status": "Failed", "message": "Username or password wrong" });
+		}
+	} else {
+		res.json({ "status": "Failed", "message": "Username or password wrong" });
+	}
+}
+
+// logout
+async function logout(req, res, next) {
+	let email = req.query.email;
+	await user.findOneAndUpdate({ email: email }, { login_status: false, verify_token: "" }, { new: true }).exec();
+	res.json({ "status": "Success", "message": "logout successfully" });
+}
 
 
-module.exports = { register, getAllUsers, getSingleUser, updateUser,deleteUser };
+module.exports = { register, getAllUsers, getSingleUser, updateUser,deleteUser,login,logout };
