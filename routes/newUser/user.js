@@ -4,9 +4,9 @@ const user = require("../../controller/newUser/user.controller");
 
 router.post('/register',user.register);
 router.get('/getAllUsers',user.getAllUsers)
-router.get("/:id",user.getSingleUser);
-router.put("/:id",user.updateUser);
-router.delete("/:id",user.deleteUser);
+router.get("/user/:id",user.getSingleUser);
+router.put("/user/:id",user.updateUser);
+router.delete("/user/:id",user.deleteUser);
 router.get("/login", user.login);
 router.put("/logout", user.logout);
 

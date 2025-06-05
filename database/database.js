@@ -14,5 +14,6 @@ database.on("open",function(){
 module.exports = {
     users:require("../model/newUser/user"),
     kycs:require("../model/newUser/kyc"),
-    requestKycs:require("../model/newUser/requestKyc")
+    requestKycs:require("../model/newUser/requestKyc"),
+    admins:require("../model/admin/admin")
   }

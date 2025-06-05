@@ -1,14 +1,13 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose');
 
-const bankAccountSchema = new Schema({
-user: { type: "" ,ref: 'User', required: true },
-  accountNumber: { type: String, required: true, unique: true },  
-  accountType: { type: String, required: true }, 
+const accountSchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
+  accountNumber: { type: String, unique: true, required: true },
+  accountType: { type: String, enum: ['savings', 'current'], required: true },
   balance: { type: Number, default: 0 },
-  branchName: { type: String, required: true },
-  ifscCode: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now },
+  currency: { type: String, default: 'INR' },
+  status: { type: String, enum: ['active', 'inactive'], default: 'active' },
+  createdAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model("bankAccount",bankAccountSchema)
+module.exports = mongoose.model('Account', accountSchema);
